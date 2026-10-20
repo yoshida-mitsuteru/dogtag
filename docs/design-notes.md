@@ -75,15 +75,33 @@ conditions.
 
 Reference: [Microchip MCP1700 datasheet](https://ww1.microchip.com/downloads/en/DeviceDoc/MCP1700-Data-Sheet-20001826F.pdf).
 
-The LiPo Amigo Pro charging board is advertised at approximately **200 mA**.
-For a nominal 110 mAh battery this corresponds to **1.82 C**.
+The charging evaluation uses the [Adafruit BQ25185 charger board
+(product 6091)](https://www.adafruit.com/product/6091). Its default
+**500 mA** charge setting is not suitable for the nominal **110 mAh**
+cell without verifying the cell's permitted charge current.
+
+The design target is approximately **22 mA**, or **0.20 C** relative to
+the nominal capacity. The BQ25185 sets fast-charge current through the
+ISET-to-ground resistance:
+
+```text
+I_CHG = K_ISET / R_ISET
+      = 300 A·Ω / 13.68 kΩ
+      ≈ 21.9 mA
+```
+
+The board's default ISET setting must be disconnected so that the
+effective ISET resistance is 13.68 kΩ. For settings below 50 mA,
+the BQ25185 datasheet also recommends an additional ISET RC network
+using a 50 pF capacitor. Both the circuit modification and the actual
+charging current remain to be verified.
 
 Before connecting the cell for charging, verify its manufacturer's permitted
 charge current, connector polarity, protection arrangement, and the actual
 charger settings. Battery capacity alone does not establish charging safety.
 
-References: [LiPo Amigo](https://shop.pimoroni.com/products/lipo-amigo/lipo-amigo)
-and [MCP73831 datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP73831-Family-Data-Sheet-DS20001984H.pdf).
+References: [Adafruit BQ25185 guide](https://learn.adafruit.com/adafruit-bq25185-usb-dc-solar-lithium-ion-polymer-charger/pinouts)
+and [TI BQ25185 datasheet](https://www.ti.com/lit/ds/symlink/bq25185.pdf).
 
 ## 5. Position Validity
 
